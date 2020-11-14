@@ -10,6 +10,14 @@ public class CustomWebViewClient extends WebViewClient {
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
 
+        System.out.println(request.getUrl().toString());
+
+        if (request.getUrl().toString().contains("wikipedia.org/wiki/")) {
+
+            return false;
+
+        }
+
         return true;
 
     }
@@ -17,7 +25,7 @@ public class CustomWebViewClient extends WebViewClient {
     @Override
     public void onLoadResource(WebView view, String url) {
 
-        Log.i("CustomWebViewClient", "Url: " + url);
+        //Log.i("CustomWebViewClient", "Url: " + url);
 
     }
 }

@@ -39,7 +39,7 @@ public class CustomWebView extends WebView {
 
     }
 
-    public void disableClick() {
+    public void disableTouch() {
 
         this.setOnTouchListener((v, event) -> {
 
@@ -51,6 +51,17 @@ public class CustomWebView extends WebView {
 
             }
 
+            return false;
+
+        });
+
+    }
+
+    public void enableTouch() {
+
+        this.setOnTouchListener((v, event) -> {
+
+            performClick();
             return false;
 
         });

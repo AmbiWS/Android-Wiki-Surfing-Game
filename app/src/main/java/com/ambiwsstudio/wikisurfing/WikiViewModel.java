@@ -13,7 +13,7 @@ public class WikiViewModel extends ViewModel {
     public void surfClick(View view) {
 
         Log.i("WikiViewModel", "Surf Button Click: " + view.toString());
-        wikiLink.setValue("https://www.wikipedia.org/");
+        wikiLink.setValue("https://www.wikipedia.org/wiki/Project_Excalibur");
 
     }
 

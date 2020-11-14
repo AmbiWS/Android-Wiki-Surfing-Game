@@ -19,7 +19,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout3"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:padding="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:layout_editor_absoluteX="181dp">
 
@@ -28,8 +29,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="32dp"
-                android:text="@string/surf"
                 android:onClick="@{(view) -> ViewModel.surfClick(view)}"
+                android:text="@string/surf"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/textViewTimer"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -65,11 +66,13 @@
                 android:id="@+id/progressBar2"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="6dp"
                 android:layout_marginBottom="16dp"
+                android:padding="0dp"
                 app:layout_constraintBottom_toTopOf="@+id/textViewGoal"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -80,7 +83,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <WebView
+            <com.ambiwsstudio.wikisurfing.CustomWebView
+                android:id="@+id/webView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:layout_editor_absoluteX="-16dp"

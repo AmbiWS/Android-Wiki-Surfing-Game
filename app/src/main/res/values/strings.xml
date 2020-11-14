@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Wiki Surfing</string>
+    <string name="surf">Surf!</string>
+    <string name="tap_surf_button_to_start">Tap \'Surf!\' button to start</string>
 </resources>

@@ -52,8 +52,6 @@ public class CustomWebViewClient extends WebViewClient {
 
         }
 
-        //System.out.println(request.getUrl().toString());
-
         if (request.getUrl().toString().contains("wikipedia.org/wiki/")
                 && wikiLinks.size() < 6) {
 
@@ -64,7 +62,6 @@ public class CustomWebViewClient extends WebViewClient {
 
             }
 
-            System.out.println(wikiLinks);
             return false;
 
         }
@@ -73,10 +70,4 @@ public class CustomWebViewClient extends WebViewClient {
 
     }
 
-    @Override
-    public void onLoadResource(WebView view, String url) {
-
-        //Log.i("CustomWebViewClient", "Url: " + url);
-
-    }
 }

@@ -15,13 +15,21 @@ public class WikiViewModel extends ViewModel {
     MutableLiveData<String> wikiLink = new MutableLiveData<>();
     MutableLiveData<String> timerUpd = new MutableLiveData<>();
     MutableLiveData<Boolean> isReadyForRestart = new MutableLiveData<>();
+    MutableLiveData<Boolean> isNeedPreviousPage = new MutableLiveData<>();
+
+    public void backClick(View view) {
+
+        Log.i("WikiViewModel", "Back Button Click: " + view.toString());
+        isNeedPreviousPage.setValue(true);
+
+    }
 
     public void surfClick(View view) {
 
         Log.i("WikiViewModel", "Surf Button Click: " + view.toString());
         wikiLink.setValue("https://www.wikipedia.org/wiki/Project_Excalibur");
 
-        new CountDownTimer(20_000, 1000) {
+        new CountDownTimer(300_000, 1000) {
 
             @Override
             public void onTick(long millisUntilFinished) {

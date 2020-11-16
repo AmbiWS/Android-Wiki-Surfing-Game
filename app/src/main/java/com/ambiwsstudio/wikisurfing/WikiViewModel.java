@@ -27,6 +27,18 @@ public class WikiViewModel extends ViewModel {
     public void surfClick(View view) {
 
         Log.i("WikiViewModel", "Surf Button Click: " + view.toString());
+
+        new Thread() {
+
+            @Override
+            public void run() {
+
+                new AsyncWikiTaskGenerator().generateGoal();
+
+            }
+
+        }.start();
+
         wikiLink.setValue("https://www.wikipedia.org/wiki/Project_Excalibur");
 
         new CountDownTimer(300_000, 1000) {

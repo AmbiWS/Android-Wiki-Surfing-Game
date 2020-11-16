@@ -31,12 +31,8 @@ public class CustomWebViewClient extends WebViewClient {
 
         if (wikiLinks.size() > 1) {
 
-            isPageLoaded.postValue(wikiLinks.size() - 1);
-            return wikiLinks.pop();
-
-        } else if (wikiLinks.size() == 1) {
-
-            isPageLoaded.postValue(wikiLinks.size() - 1);
+            isPageLoaded.postValue(wikiLinks.size() - 2);
+            wikiLinks.pop();
             return wikiLinks.peek();
 
         }

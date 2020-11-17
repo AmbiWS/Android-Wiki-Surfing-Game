@@ -9,6 +9,8 @@ import android.os.Bundle;
 
 import com.ambiwsstudio.wikisurfing.databinding.ActivityMainBinding;
 
+import java.util.Stack;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String wikiMainPageUrl = "https://www.wikipedia.org/";
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         viewModel.timerUpd.observe(this, this::updateTheTimer);
         viewModel.isReadyForRestart.observe(this, this::resetUi);
         viewModel.isNeedPreviousPage.observe(this, this::loadPrev);
+        viewModel.isGenerating.observe(this, this::setupGeneration);
         client.getIsPageLoaded().observe(this, this::updateProgress);
 
     }
@@ -52,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         binding.webView.loadUrl(wikiMainPageUrl);
         binding.textViewGoal.setText("You lose. Better luck next time! :)");
         binding.button2.setEnabled(true);
-        client.setGameInit(false);
+        client.setGameInit(false, null);
 
     }
 
@@ -63,13 +66,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @SuppressLint("SetTextI18n")
-    private void setupTheGame(String link) {
+    private void setupGeneration(Boolean bool) {
 
-        binding.webView.loadUrl(link);
         binding.webView.enableTouch();
         binding.button2.setEnabled(false);
         binding.textViewGoal.setText("Goal generation...");
-        client.setGameInit(true);
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void setupTheGame(Stack<String> stack) {
+
+        String init = "https://en.m.wikipedia.org/wiki/" + stack.get(0);
+        binding.webView.loadUrl(init);
+        binding.webView.enableTouch();
+        binding.button2.setEnabled(false);
+        binding.textViewGoal.setText("F: " + stack.get(0).replaceAll("_", " ")
+                + "\n" +
+                "L: " + stack.peek().replaceAll("_", " "));
+        client.setGameInit(true, init);
 
     }
 

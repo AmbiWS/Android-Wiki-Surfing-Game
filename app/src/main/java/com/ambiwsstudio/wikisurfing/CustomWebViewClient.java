@@ -15,9 +15,16 @@ public class CustomWebViewClient extends WebViewClient {
     private boolean isGameInit = false;
     private String initLink = null;
 
-    public void setGameInit(boolean isGameInit) {
+    public void setGameInit(boolean isGameInit, String wikiLink) {
 
         this.isGameInit = isGameInit;
+
+        if (isGameInit) {
+
+            initLink = wikiLink;
+            wikiLinks.push(initLink);
+
+        }
 
     }
 
@@ -44,13 +51,13 @@ public class CustomWebViewClient extends WebViewClient {
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
 
-        if (isGameInit) {
+        /*if (isGameInit) {
 
             isGameInit = false;
             wikiLinks.push(request.getUrl().toString());
             initLink = request.getUrl().toString().substring(request.getUrl().toString().lastIndexOf('/'));
 
-        }
+        }*/
 
         if (request.getUrl().toString().contains("wikipedia.org/wiki/")
                 && wikiLinks.size() < 6) {

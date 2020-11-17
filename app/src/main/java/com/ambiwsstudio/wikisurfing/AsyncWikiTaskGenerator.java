@@ -1,10 +1,9 @@
 package com.ambiwsstudio.wikisurfing;
 
-import android.util.Pair;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Stack;
 import java.util.regex.Matcher;
@@ -19,16 +18,38 @@ import okhttp3.ResponseBody;
 
 public class AsyncWikiTaskGenerator {
 
+    private static final String WIKI_RANDOM_PAGE = "https://en.m.wikipedia.org/wiki/Special:Random#/random";
+
     private Request request;
     private final OkHttpClient client = new OkHttpClient();
+    private final Stack<String> wikiLinks = new Stack<>();
     private String wikiFrom;
-    private Stack<String> wikiLinks = new Stack<>();
-    //private Pair<String, String> goal;
 
-    public void generateGoal() {
+    public Stack<String> generateGoal() {
 
-        buildRequest();
+        buildRequest(WIKI_RANDOM_PAGE);
         buildCallback();
+
+        synchronized (this) {
+
+            try {
+
+                System.out.println("WAITING______________________");
+                this.wait();
+                System.out.println("WAITING_END______________________");
+
+
+
+            } catch (Exception e) {
+
+                e.printStackTrace();
+
+            }
+
+        }
+
+        System.out.println("RETURNING_LINKS______________________");
+        return wikiLinks;
 
     }
 
@@ -52,14 +73,34 @@ public class AsyncWikiTaskGenerator {
 
                     System.out.println("=============================================================");
 
+                    if (wikiLinks.empty()) {
+
+                        String init = response.request().url().toString().substring(response.request().url().toString().lastIndexOf('/') + 1);
+                        wikiLinks.push(init);
+                        System.out.println(init + " (PUSHED)");
+
+                    }
+
                     wikiFrom = response.request().url().toString().substring(response.request().url().toString().lastIndexOf('/') + 1).replaceAll("_", " ");
                     System.out.println(wikiFrom);
 
-                    if (wikiLinks.size() < 5) {
+                    String next = nextLink(Objects.requireNonNull(responseBody).string());
+                    System.out.println(next + " (PUSHED)");
+                    wikiLinks.push(next);
 
-                        String next = nextLink(responseBody.string());
-                        System.out.println(next + " (PUSHED)");
-                        wikiLinks.push(next);
+                    if (wikiLinks.size() < 6) {
+
+                        buildRequest("https://en.m.wikipedia.org/wiki/" + next);
+                        buildCallback();
+
+                    } else {
+
+                        synchronized (AsyncWikiTaskGenerator.this) {
+
+                            AsyncWikiTaskGenerator.this.notify();
+                            System.out.println("NOTIFIED______________________");
+
+                        }
 
                     }
 
@@ -71,11 +112,10 @@ public class AsyncWikiTaskGenerator {
 
     }
 
-    private void buildRequest() {
+    private void buildRequest(String url) {
 
-        String WIKI_RANDOM_PAGE = "https://en.m.wikipedia.org/wiki/Special:Random#/random";
         request = new Request.Builder()
-                .url(WIKI_RANDOM_PAGE)
+                .url(url)
                 .build();
 
     }
@@ -94,12 +134,13 @@ public class AsyncWikiTaskGenerator {
 
         System.out.println("Count: " + links);
 
-        int random = new Random().nextInt(links - 2) + 2;
-        System.out.println("Random: " + random);
 
         String match = null;
 
         do {
+
+            int random = new Random().nextInt(links - 2) + 2;
+            System.out.println("Random: " + random);
 
             matcher.reset();
             while (random > 1 && matcher.find()) {
@@ -109,11 +150,10 @@ public class AsyncWikiTaskGenerator {
 
             }
 
-        } while (match.contains("Main_Page"));
+        } while (Objects.requireNonNull(match).contains("Main_Page"));
 
         return match.substring(match.lastIndexOf('/') + 1, match.length() - 1);
 
     }
-
 
 }

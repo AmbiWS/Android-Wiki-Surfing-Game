@@ -18,7 +18,7 @@ import okhttp3.ResponseBody;
 
 public class AsyncWikiTaskGenerator {
 
-    public static final int linksToFinish = 2;
+    public static final int linksToFinish = 3;
     private static final String WIKI_RANDOM_PAGE = "https://en.m.wikipedia.org/wiki/Special:Random#/random";
 
     private Request request;

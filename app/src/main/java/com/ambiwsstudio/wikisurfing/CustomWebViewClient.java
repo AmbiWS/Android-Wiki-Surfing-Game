@@ -12,19 +12,20 @@ public class CustomWebViewClient extends WebViewClient {
 
     private final Stack<String> wikiLinks = new Stack<>();
     private final MutableLiveData<Integer> isPageLoaded = new MutableLiveData<>();
-    private boolean isGameInit = false;
+    private final MutableLiveData<Boolean> isWin = new MutableLiveData<>();
     private String initLink = null;
+    private String winLink = null;
 
-    public void setGameInit(boolean isGameInit, String wikiLink) {
+    public void setLinks(String wikiLink, String wikiLastLink) {
 
-        this.isGameInit = isGameInit;
+        wikiLinks.push(wikiLink);
+        winLink = wikiLastLink;
 
-        if (isGameInit) {
+    }
 
-            initLink = wikiLink;
-            wikiLinks.push(initLink);
+    public MutableLiveData<Boolean> getIsWin() {
 
-        }
+        return isWin;
 
     }
 
@@ -51,14 +52,6 @@ public class CustomWebViewClient extends WebViewClient {
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
 
-        /*if (isGameInit) {
-
-            isGameInit = false;
-            wikiLinks.push(request.getUrl().toString());
-            initLink = request.getUrl().toString().substring(request.getUrl().toString().lastIndexOf('/'));
-
-        }*/
-
         if (request.getUrl().toString().contains("wikipedia.org/wiki/")
                 && wikiLinks.size() < 6) {
 
@@ -70,6 +63,10 @@ public class CustomWebViewClient extends WebViewClient {
             }
 
             return false;
+
+        } else if (request.getUrl().toString().contains("wikipedia.org/wiki/" + winLink)) {
+
+            isWin.postValue(true);
 
         }
 

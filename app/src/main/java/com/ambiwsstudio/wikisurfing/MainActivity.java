@@ -30,6 +30,16 @@ public class MainActivity extends AppCompatActivity {
         viewModel.isNeedPreviousPage.observe(this, this::loadPrev);
         viewModel.isGenerating.observe(this, this::setupGeneration);
         client.getIsPageLoaded().observe(this, this::updateProgress);
+        client.getIsWin().observe(this, this::setupWin);
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void setupWin(Boolean bool) {
+
+        binding.webView.disableTouch();
+        binding.textViewGoal.setText("You Win! Well Played:)");
+        binding.button2.setEnabled(true);
 
     }
 
@@ -55,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
         binding.webView.loadUrl(wikiMainPageUrl);
         binding.textViewGoal.setText("You lose. Better luck next time! :)");
         binding.button2.setEnabled(true);
-        client.setGameInit(false, null);
 
     }
 
@@ -84,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         binding.textViewGoal.setText("F: " + stack.get(0).replaceAll("_", " ")
                 + "\n" +
                 "L: " + stack.peek().replaceAll("_", " "));
-        client.setGameInit(true, init);
+        client.setLinks(init, stack.peek());
 
     }
 

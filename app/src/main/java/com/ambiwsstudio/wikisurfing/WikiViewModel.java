@@ -77,8 +77,6 @@ public class WikiViewModel extends ViewModel {
 
                 wikiLinks.clear();
                 wikiLinks = new AsyncWikiTaskGenerator().generateGoal();
-
-                //postValue("https://en.m.wikipedia.org/wiki/" + wikiLinks.get(0));
                 wikiLink.postValue(wikiLinks);
 
                 new Handler(Looper.getMainLooper()).post(() -> timer.start());

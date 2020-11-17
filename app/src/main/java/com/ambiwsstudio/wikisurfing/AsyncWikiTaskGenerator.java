@@ -24,7 +24,6 @@ public class AsyncWikiTaskGenerator {
     private Request request;
     private final OkHttpClient client = new OkHttpClient();
     private final Stack<String> wikiLinks = new Stack<>();
-    private String wikiFrom;
 
     public Stack<String> generateGoal() {
 
@@ -35,11 +34,7 @@ public class AsyncWikiTaskGenerator {
 
             try {
 
-                System.out.println("WAITING______________________");
                 this.wait();
-                System.out.println("WAITING_END______________________");
-
-
 
             } catch (Exception e) {
 
@@ -49,7 +44,6 @@ public class AsyncWikiTaskGenerator {
 
         }
 
-        System.out.println("RETURNING_LINKS______________________");
         return wikiLinks;
 
     }
@@ -72,18 +66,12 @@ public class AsyncWikiTaskGenerator {
                     if (!response.isSuccessful())
                         throw new IOException("Unexpected code " + response);
 
-                    System.out.println("=============================================================");
-
                     if (wikiLinks.empty()) {
 
                         String init = response.request().url().toString().substring(response.request().url().toString().lastIndexOf('/') + 1);
                         wikiLinks.push(init);
-                        System.out.println(init + " (PUSHED)");
 
                     }
-
-                    wikiFrom = response.request().url().toString().substring(response.request().url().toString().lastIndexOf('/') + 1).replaceAll("_", " ");
-                    System.out.println(wikiFrom);
 
                     String next = nextLink(Objects.requireNonNull(responseBody).string());
 
@@ -96,7 +84,6 @@ public class AsyncWikiTaskGenerator {
 
                     }
 
-                    System.out.println(next + " (PUSHED)");
                     wikiLinks.push(next);
 
                     if (wikiLinks.size() < linksToFinish + 1) {
@@ -109,7 +96,6 @@ public class AsyncWikiTaskGenerator {
                         synchronized (AsyncWikiTaskGenerator.this) {
 
                             AsyncWikiTaskGenerator.this.notify();
-                            System.out.println("NOTIFIED______________________");
 
                         }
 
@@ -143,9 +129,6 @@ public class AsyncWikiTaskGenerator {
 
         }
 
-        System.out.println("Count: " + links);
-
-
         String match = null;
         int linkCounter = 0;
 
@@ -158,7 +141,6 @@ public class AsyncWikiTaskGenerator {
             }
 
             int random = new Random().nextInt(links - 2) + 2;
-            System.out.println("Random: " + random);
 
             matcher.reset();
             while (random > 1 && matcher.find()) {

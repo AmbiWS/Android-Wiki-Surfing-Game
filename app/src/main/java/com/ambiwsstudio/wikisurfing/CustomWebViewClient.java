@@ -12,18 +12,20 @@ public class CustomWebViewClient extends WebViewClient {
 
     private final Stack<String> wikiLinks = new Stack<>();
     private final MutableLiveData<Integer> isPageLoaded = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> isWin = new MutableLiveData<>();
+    private final MutableLiveData<String> isWin = new MutableLiveData<>();
     private String initLink = null;
     private String winLink = null;
 
     public void setLinks(String wikiLink, String wikiLastLink) {
 
-        wikiLinks.push(wikiLink);
+        wikiLinks.clear();
+        initLink = wikiLink;
+        wikiLinks.push(initLink);
         winLink = wikiLastLink;
 
     }
 
-    public MutableLiveData<Boolean> getIsWin() {
+    public MutableLiveData<String> getIsWin() {
 
         return isWin;
 
@@ -52,8 +54,12 @@ public class CustomWebViewClient extends WebViewClient {
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
 
-        if (request.getUrl().toString().contains("wikipedia.org/wiki/")
-                && wikiLinks.size() < 6) {
+        if (request.getUrl().toString().contains("wikipedia.org/wiki/" + winLink)) {
+
+            isWin.postValue("https://en.m.wikipedia.org/wiki/" + winLink);
+
+        } else if (request.getUrl().toString().contains("wikipedia.org/wiki/")
+                && wikiLinks.size() < (AsyncWikiTaskGenerator.linksToFinish + 1)) {
 
             if (!initLink.equals(request.getUrl().toString().substring(request.getUrl().toString().lastIndexOf('/')))) {
 
@@ -63,10 +69,6 @@ public class CustomWebViewClient extends WebViewClient {
             }
 
             return false;
-
-        } else if (request.getUrl().toString().contains("wikipedia.org/wiki/" + winLink)) {
-
-            isWin.postValue(true);
 
         }
 

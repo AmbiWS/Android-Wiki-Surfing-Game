@@ -35,10 +35,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @SuppressLint("SetTextI18n")
-    private void setupWin(Boolean bool) {
+    private void setupWin(String link) {
 
+        viewModel.stopTimer();
+        binding.webView.loadUrl(link);
         binding.webView.disableTouch();
         binding.textViewGoal.setText("You Win! Well Played:)");
+        binding.progressBar2.setProgress(binding.progressBar2.getProgress() + 1);
+        binding.textViewTimer.setText(R.string.tap_surf_button_to_start);
         binding.button2.setEnabled(true);
 
     }
@@ -64,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         binding.webView.disableTouch();
         binding.webView.loadUrl(wikiMainPageUrl);
         binding.textViewGoal.setText("You lose. Better luck next time! :)");
+        binding.progressBar2.setProgress(0);
         binding.button2.setEnabled(true);
 
     }
@@ -86,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     private void setupTheGame(Stack<String> stack) {
 
+        binding.progressBar2.setProgress(0);
         String init = "https://en.m.wikipedia.org/wiki/" + stack.get(0);
         binding.webView.loadUrl(init);
         binding.webView.enableTouch();
@@ -108,6 +114,8 @@ public class MainActivity extends AppCompatActivity {
         client = new CustomWebViewClient();
         binding.webView.setWebViewClient(client);
         binding.webView.disableTouch();
+
+        binding.progressBar2.setMax(AsyncWikiTaskGenerator.linksToFinish);
 
     }
 

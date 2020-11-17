@@ -20,7 +20,41 @@ public class WikiViewModel extends ViewModel {
     MutableLiveData<Boolean> isReadyForRestart = new MutableLiveData<>();
     MutableLiveData<Boolean> isGenerating = new MutableLiveData<>();
     MutableLiveData<Boolean> isNeedPreviousPage = new MutableLiveData<>();
+    CountDownTimer timer;
     Stack<String> wikiLinks = new Stack<>();
+
+    public void stopTimer() {
+
+        timer.cancel();
+        initTimer();
+
+    }
+
+    public void initTimer() {
+
+        timer = new CountDownTimer(300_000, 1000) {
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+                @SuppressLint("DefaultLocale") String time = String.format("%02d:%02d",
+                        TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
+                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)));
+                timerUpd.postValue("Time left: " + time);
+
+            }
+
+            @Override
+            public void onFinish() {
+
+                timerUpd.postValue("Tap 'Surf!' button to start");
+                isReadyForRestart.postValue(true);
+
+            }
+
+        };
+
+    }
 
     public void backClick(View view) {
 
@@ -33,6 +67,7 @@ public class WikiViewModel extends ViewModel {
 
         Log.i("WikiViewModel", "Surf Button Click: " + view.toString());
 
+        initTimer();
         isGenerating.setValue(true);
 
         new Thread() {
@@ -46,27 +81,7 @@ public class WikiViewModel extends ViewModel {
                 //postValue("https://en.m.wikipedia.org/wiki/" + wikiLinks.get(0));
                 wikiLink.postValue(wikiLinks);
 
-                new Handler(Looper.getMainLooper()).post(() -> new CountDownTimer(300_000, 1000) {
-
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-
-                        @SuppressLint("DefaultLocale") String time = String.format("%02d:%02d",
-                                TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
-                                TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)));
-                        timerUpd.postValue("Time left: " + time);
-
-                    }
-
-                    @Override
-                    public void onFinish() {
-
-                        timerUpd.postValue("Tap 'Surf!' button to start");
-                        isReadyForRestart.postValue(true);
-
-                    }
-
-                }.start());
+                new Handler(Looper.getMainLooper()).post(() -> timer.start());
 
             }
 

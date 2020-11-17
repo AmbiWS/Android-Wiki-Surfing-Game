@@ -18,6 +18,7 @@ import okhttp3.ResponseBody;
 
 public class AsyncWikiTaskGenerator {
 
+    public static final int linksToFinish = 2;
     private static final String WIKI_RANDOM_PAGE = "https://en.m.wikipedia.org/wiki/Special:Random#/random";
 
     private Request request;
@@ -88,7 +89,7 @@ public class AsyncWikiTaskGenerator {
                     System.out.println(next + " (PUSHED)");
                     wikiLinks.push(next);
 
-                    if (wikiLinks.size() < 6) {
+                    if (wikiLinks.size() < linksToFinish + 1) {
 
                         buildRequest("https://en.m.wikipedia.org/wiki/" + next);
                         buildCallback();

@@ -9,6 +9,8 @@ import android.os.Bundle;
 
 import com.ambiwsstudio.wikisurfing.databinding.ActivityMainBinding;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity {
@@ -96,9 +98,19 @@ public class MainActivity extends AppCompatActivity {
         binding.webView.loadUrl(init);
         binding.webView.enableTouch();
         binding.button2.setEnabled(false);
-        binding.textViewGoal.setText("F: " + stack.get(0).replaceAll("_", " ")
-                + "\n" +
-                "L: " + stack.peek().replaceAll("_", " "));
+
+        try {
+
+            binding.textViewGoal.setText(URLDecoder.decode("F: " + stack.get(0).replaceAll("_", " ")
+                    + "\n" +
+                    "L: " + stack.peek().replaceAll("_", " "), "UTF-8"));
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
+
         client.setLinks(init, stack.peek());
 
     }

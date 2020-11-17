@@ -86,6 +86,16 @@ public class AsyncWikiTaskGenerator {
                     System.out.println(wikiFrom);
 
                     String next = nextLink(Objects.requireNonNull(responseBody).string());
+
+                    if (next == null) {
+
+                        wikiLinks.clear();
+                        buildRequest(WIKI_RANDOM_PAGE);
+                        buildCallback();
+                        return;
+
+                    }
+
                     System.out.println(next + " (PUSHED)");
                     wikiLinks.push(next);
 
@@ -137,8 +147,15 @@ public class AsyncWikiTaskGenerator {
 
 
         String match = null;
+        int linkCounter = 0;
 
         do {
+
+            if (linkCounter >= 10) {
+
+                return null;
+
+            }
 
             int random = new Random().nextInt(links - 2) + 2;
             System.out.println("Random: " + random);
@@ -150,6 +167,8 @@ public class AsyncWikiTaskGenerator {
                 random--;
 
             }
+
+            linkCounter++;
 
         } while (Objects.requireNonNull(match).contains("Main_Page"));
 

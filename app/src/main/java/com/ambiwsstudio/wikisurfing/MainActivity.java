@@ -10,7 +10,6 @@ import android.os.Bundle;
 import com.ambiwsstudio.wikisurfing.databinding.ActivityMainBinding;
 
 import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity {
